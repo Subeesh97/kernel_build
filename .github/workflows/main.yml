@@ -51,6 +51,7 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
+          git submodule update --init --recursive
           make ${args} ${{ env.KERNEL_CONFIG }}
           scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
           scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR
