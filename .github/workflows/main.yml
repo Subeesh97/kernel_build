@@ -45,7 +45,7 @@ jobs:
           export KBUILD_BUILD_USER="TycOnee"
           export KBUILD_BUILD_HOST="Builder"
           export PATH=$GITHUB_WORKSPACE/clang/bin:${PATH}
-          args="                  args="ARCH=arm64 \
+          args="                  ARCH=arm64 \
                                   O=../out \
                                   ${{ env.BUILD_ARGS }} \ 
                                   CLANG_TRIPLE=aarch64-linux-gnu- \
