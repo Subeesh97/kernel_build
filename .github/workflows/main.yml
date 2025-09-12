@@ -33,7 +33,7 @@ jobs:
           sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler python2 python3
           git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 aarch64-linux-android-4.9
           git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 arm-linux-androideabi-4.9
-          mkdir clang && curl -L -O https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.1/LLVM-21.1.1-Linux-X64.tar.xz && tar -C clang/ -xf LLVM-21.1.1-Linux-X64.tar.xz -RLO && tar -C clang/ -xf clang-*.tar.gz
+          mkdir clang && curl -L -O https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.1/LLVM-21.1.1-Linux-X64.tar.xz && tar -xf LLVM-21.1.1-Linux-X64.tar.xz && mv LLVM-21.1.1-Linux-X64/* clang/
 
      
       - name: Pull kernel source
