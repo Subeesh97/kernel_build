@@ -45,6 +45,13 @@ jobs:
           export KBUILD_BUILD_USER="TycOnee"
           export KBUILD_BUILD_HOST="Builder"
           export PATH=$GITHUB_WORKSPACE/clang/bin:${PATH}
+          export CC=clang
+          export LD=ld.lld
+          export AR=llvm-ar
+          export NM=llvm-nm
+          export OBJCOPY=llvm-objcopy
+          export OBJDUMP=llvm-objdump
+          export STRIP=llvm-strip
           args="                  ARCH=arm64 \
                                   O=../out \
                                   ${{ env.BUILD_ARGS }} \
