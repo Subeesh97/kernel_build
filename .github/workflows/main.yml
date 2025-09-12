@@ -45,18 +45,12 @@ jobs:
           export KBUILD_BUILD_USER="TycOnee"
           export KBUILD_BUILD_HOST="Builder"
           export PATH=$GITHUB_WORKSPACE/clang/bin:${PATH}
-          export CC=clang
-          export AR=llvm-ar
-          export NM=llvm-nm
-          export OBJCOPY=llvm-objcopy
-          export OBJDUMP=llvm-objdump
-          export STRIP=llvm-strip
-          args="                  ARCH=arm64 \
+          args="                  args="ARCH=arm64 \
                                   O=../out \
-                                  ${{ env.BUILD_ARGS }} \
+                                  ${{ env.BUILD_ARGS }} \ 
                                   CLANG_TRIPLE=aarch64-linux-gnu- \
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
-                                  CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
+                                  CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-" 
           cd kernel-source
           git submodule update --init --recursive
           make ${args} ${{ env.KERNEL_CONFIG }}
