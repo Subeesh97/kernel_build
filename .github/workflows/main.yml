@@ -45,7 +45,7 @@ jobs:
           export PATH=$GITHUB_WORKSPACE/clang/bin:${PATH}
           args="                  ARCH=arm64 \
                                   O=../out \
-                                  ${{ env.BUILD_ARGS }} \
+                                  ${{ env.BUILD_ARGS }}
                                   
           cd kernel-source
           git submodule update --init --recursive
