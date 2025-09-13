@@ -71,8 +71,8 @@ jobs:
           scripts/config --file ../out/.config --enable QCOM_SMP2P_SLEEPSTATE
           scripts/config --file ../out/.config --enable QCOM_SUBSYSTEM_SLEEP_STATS
           scripts/config --file ../out/.config --enable REGULATOR
-          sed -i 's/# CONFIG_FINGERPRINT_FPC_TEE is not set/CONFIG_FINGERPRINT_FPC_TEE=y/' ../out/.config
-          sed -i 's/# CONFIG_FINGERPRINT_GOODIX_TEE is not set/CONFIG_FINGERPRINT_GOODIX_TEE=y/' ../out/.config
+          sed -i 's/CONFIG_FINGERPRINT_FPC_TEE=m/CONFIG_FINGERPRINT_FPC_TEE=y/' ../out/.config
+          sed -i 's/CONFIG_FINGERPRINT_GOODIX_TEE=m/CONFIG_FINGERPRINT_GOODIX_TEE=y/' ../out/.config
           sed -i 's/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=m/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=y/' ../out/.config
           sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5=y/' ../out/.config
           sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_I2C=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_I2C=y/' ../out/.config
