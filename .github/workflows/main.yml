@@ -67,10 +67,12 @@ jobs:
           scripts/config --file ../out/.config --enable QTI_POLICY_ENGINE_SENSOR
           scripts/config --file ../out/.config --enable QTI_SDPM_CLOCK_MONITOR
           scripts/config --file ../out/.config --enable QTI_CPU_HOTPLUG_COOLING_DEVICE
-          scripts/config --file ../out/.config --enable PM_AUTOSLEEP
-          scripts/config --file ../out/.config --enable QCOM_SMP2P_SLEEPSTATE
-          scripts/config --file ../out/.config --enable QCOM_SUBSYSTEM_SLEEP_STATS
-          scripts/config --file ../out/.config --enable REGULATOR
+          scripts/config --file ../out/.config --set-val PM_WAKELOCKS_LIMIT 50
+          scripts/config --file ../out/.config --enable PM_WAKELOCKS_GC
+          scripts/config --file ../out/.config --enable ARM_QCOM_LPM_CPUIDLE
+          scripts/config --file ../out/.config --enable QGKI_PSCI_OSI_SUPPORT
+          scripts/config --file ../out/.config --enable QGKI_CPUIDLE_FAILED_STAT
+          scripts/config --file ../out/.config --enable PM_DEBUG
           sed -i 's/CONFIG_FINGERPRINT_FPC_TEE=m/CONFIG_FINGERPRINT_FPC_TEE=y/' ../out/.config
           sed -i 's/CONFIG_FINGERPRINT_GOODIX_TEE=m/CONFIG_FINGERPRINT_GOODIX_TEE=y/' ../out/.config
           sed -i 's/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=m/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=y/' ../out/.config
