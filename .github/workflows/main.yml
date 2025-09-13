@@ -52,6 +52,7 @@ jobs:
           cd kernel-source
           git submodule update --init --recursive
           make ${args} ${{ env.KERNEL_CONFIG }}
+          scripts/config --file ../out/.config --disable CONFIG_WERROR
           scripts/config --file ../out/.config --disable CONFIG_COMPAT_VDSO
           scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
           scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR
