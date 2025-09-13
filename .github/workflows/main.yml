@@ -81,6 +81,7 @@ jobs:
           sed -i 's/CONFIG_MI_LOG=y/# CONFIG_MI_LOG is not set/' ../out/.config
           sed -i 's/CONFIG_MI_EXCEPTION_LOG=y/# CONFIG_MI_EXCEPTION_LOG is not set/' ../out/.config
           sed -i 's/CONFIG_BINDER_PRIO=y/# CONFIG_BINDER_PRIO is not set/' ../out/.config
+          sed -i '/CONFIG_MIHW=y/a CONFIG_OEM_KERNEL=y' ../out/.config
           make ${args} olddefconfig
 
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
