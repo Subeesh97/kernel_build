@@ -77,6 +77,9 @@ jobs:
           sed -i 's/CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE=m/CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE=y/' ../out/.config
           sed -i 's/CONFIG_INPUT_QCOM_HV_HAPTICS=m/CONFIG_INPUT_QCOM_HV_HAPTICS=y/' ../out/.config
           sed -i 's/CONFIG_LOCALVERSION="-qgki"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config
+          sed -i 's/CONFIG_MILLET_HS=y/# CONFIG_MILLET_HS is not set/' ../out/.config
+          sed -i 's/CONFIG_MILLET_SIG=y/# CONFIG_MILLET_SIG is not set/' ../out/.config
+          sed -i 's/CONFIG_MILLET_CGROUP=y/# CONFIG_MILLET_CGROUP is not set/' ../out/.config
           make ${args} olddefconfig
 
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
