@@ -48,8 +48,7 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
-          sed -i '3i#include <linux/types.h>' include/linux/hwid.h
-          git submodule update --init --recursive
+          
           make ${args} ${{ env.KERNEL_CONFIG }}
 
           scripts/config --file ../out/.config --disable DEBUG_FS
@@ -57,16 +56,7 @@ jobs:
           scripts/config --file ../out/.config --disable STACKPROTECTOR
           scripts/config --file ../out/.config --disable STACKPROTECTOR_STRONG
           scripts/config --file ../out/.config --enable USE_COMMON_CAMERA
-          sed -i 's/CONFIG_FINGERPRINT_FPC_TEE=m/CONFIG_FINGERPRINT_FPC_TEE=y/' ../out/.config
-          sed -i 's/CONFIG_FINGERPRINT_GOODIX_TEE=m/CONFIG_FINGERPRINT_GOODIX_TEE=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=m/CONFIG_TOUCHSCREEN_ST_FTS_V521_SPI=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_I2C=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_I2C=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_LOADER=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_LOADER=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_DEVICE_ACCESS=m/CONFIG_TOUCHSCREEN_CYPRESS_CYTTSP5_DEVICE_ACCESS=y/' ../out/.config
-          sed -i 's/CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE=m/CONFIG_TOUCHSCREEN_XIAOMI_TOUCHFEATURE=y/' ../out/.config
-          sed -i 's/CONFIG_INPUT_QCOM_HV_HAPTICS=m/CONFIG_INPUT_QCOM_HV_HAPTICS=y/' ../out/.config
-          sed -i 's/CONFIG_LOCALVERSION="-perf"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config          
+          sed -i 's/CONFIG_LOCALVERSION="-qgki"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config          
           make ${args} olddefconfig
 
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
