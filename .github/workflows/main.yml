@@ -50,7 +50,7 @@ jobs:
           cd kernel-source
           curl -L https://raw.githubusercontent.com/Subeesh97/kernel_build/refs/heads/main/odin_defconfig -o arch/arm64/configs/odin_defconfig
           curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-          head -n 30 drivers/input/fingerprint/fpc_tee/fpc1020_tee.c | grep -n "#include" | tail -1 | cut -d: -f1 | xargs -I {} sed -i '{}a #include <linux/pinctrl/consumer.h>' drivers/input/fingerprint/fpc_tee/fpc1020_tee.c
+          sed -i '2i #include <linux/pinctrl/consumer.h>' drivers/input/fingerprint/fpc_tee/fpc1020_tee.c
           sed -i 's/int rc;/int rc = 0;/g' drivers/input/fingerprint/fpc_tee/fpc1020_tee.c
           make ${args} ${{ env.KERNEL_CONFIG }}
 
