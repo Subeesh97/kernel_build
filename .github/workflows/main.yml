@@ -74,8 +74,6 @@ jobs:
           echo "EXPORT_SYMBOL(mi_disp_unregister_client);" >> kernel/panic.c
           echo "EXPORT_SYMBOL(mi_disp_set_fod_queue_work);" >> kernel/panic.c
 
-          sed -i '1i #include <linux/soc/qcom/smem.h>' kernel/panic.c
-          sed -i '2i #include <linux/tracepoint.h>' kernel/panic.c
           curl -L https://raw.githubusercontent.com/Subeesh97/kernel_build/refs/heads/main/odin_defconfig -o arch/arm64/configs/odin_defconfig
           curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
           
