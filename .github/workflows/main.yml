@@ -69,7 +69,17 @@ jobs:
           scripts/config --file ../out/.config --disable CC_STACKPROTECTOR
           scripts/config --file ../out/.config --disable STACKPROTECTOR
           scripts/config --file ../out/.config --disable STACKPROTECTOR_STRONG
-          sed -i 's/CONFIG_LOCALVERSION="-qgki"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config          
+          sed -i 's/CONFIG_LOCALVERSION="-qgki"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config    
+          sed -i 's/CONFIG_MI_DISP=y/# CONFIG_MI_DISP is not set/g' ../out/.config
+          sed -i 's/CONFIG_DRM_MI_DISP=y/# CONFIG_DRM_MI_DISP is not set/g' ../out/.config
+          sed -i 's/CONFIG_MSM_CVP=y/# CONFIG_MSM_CVP is not set/g' ../out/.config
+          sed -i 's/CONFIG_VIDEO_CVP=y/# CONFIG_VIDEO_CVP is not set/g' ../out/.config
+          sed -i 's/CONFIG_MSM_GLOBAL_SYNX=y/# CONFIG_MSM_GLOBAL_SYNX is not set/g' ../out/.config
+          sed -i 's/CONFIG_REGULATOR_QPNP_PON=y/# CONFIG_REGULATOR_QPNP_PON is not set/g' ../out/.config
+          echo "CONFIG_PINCTRL=y" >> ../out/.config
+          echo "CONFIG_PINCTRL_MSM=y" >> ../out/.config
+          echo "CONFIG_QCOM_SMEM=y" >> ../out/.config
+          echo "CONFIG_REGULATOR=y" >> ../out/.config
           make ${args} olddefconfig
 
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
