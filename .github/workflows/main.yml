@@ -59,9 +59,10 @@ jobs:
               fi
               sed -i 's/int rc;/int rc = 0;/g' "$file"
           done
-
-          export KCFLAGS="-Wno-error=implicit-function-declaration -Wno-error=int-conversion"
+          
           sed -i 's/WLAN_INI_FILE_DEFAULT/\"\/vendor\/etc\/wifi\/WCNSS_qcom_cfg.ini\"/g' drivers/staging/qcacld-3.0/core/hdd/src/wlan_hdd_main.c
+          sed -i 's/struct ce_ops \*ce_services_legacy()/struct ce_ops *ce_services_legacy(void)/g' drivers/staging/qca-wifi-host-cmn/hif/src/ce/ce_service_legacy.c
+          export KCFLAGS="-Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=strict-prototypes"
           make ${args} ${{ env.KERNEL_CONFIG }}
 
           scripts/config --file ../out/.config --disable DEBUG_FS
