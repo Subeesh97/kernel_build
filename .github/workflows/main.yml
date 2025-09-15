@@ -1,4 +1,4 @@
-name: Build MikaKernel KSU
+name: Build PhoeniX Kernel
 
 
 on:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-kernel:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Setup environment
@@ -28,14 +28,17 @@ jobs:
           deb http://mirrors.edge.kernel.org/ubuntu jammy-backports main restricted universe multiverse
           deb http://mirrors.edge.kernel.org/ubuntu jammy-security main restricted universe multiverse
           EOF
+          sudo apt-get clean
+          sudo apt-get update
+          sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler python2 python3
           git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 aarch64-linux-android-4.9
           git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 arm-linux-androideabi-4.9
           mkdir clang && curl https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android14-dev/clang-r487747c.tar.gz -RLO && tar -C clang/ -xf clang-*.tar.gz
 
       - name: Pull kernel source
         run: |
-          git clone --depth=1 ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_SOURCE_BRANCH }} kernel-source
-
+         git clone --depth=1 https://TycOnee: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@github.com/${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_SOURCE_BRANCH }} kernel-source
+         
       - name: Build kernel
         run: |
           export KBUILD_BUILD_USER="TycOnee"
@@ -48,74 +51,15 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
-          head -n 767 kernel/panic.c > kernel/panic.c.tmp
-          mv kernel/panic.c.tmp kernel/panic.c
-          echo "" >> kernel/panic.c
-          echo "/* Simple stub functions for missing symbols */" >> kernel/panic.c
-          echo "void *qcom_smem_get(unsigned host, unsigned item, void *size)" >> kernel/panic.c
-          echo "{" >> kernel/panic.c
-          echo "    return NULL;" >> kernel/panic.c
-          echo "}" >> kernel/panic.c
-          echo "" >> kernel/panic.c
-          echo "int __tracepoint_pil_restart_level = 0;" >> kernel/panic.c
-          echo "" >> kernel/panic.c
-          echo "int mi_disp_unregister_client(void *client)" >> kernel/panic.c
-          echo "{" >> kernel/panic.c
-          echo "    return 0;" >> kernel/panic.c
-          echo "}" >> kernel/panic.c
-          echo "" >> kernel/panic.c
-          echo "int mi_disp_set_fod_queue_work(void *work, int enable)" >> kernel/panic.c
-          echo "{" >> kernel/panic.c
-          echo "    return 0;" >> kernel/panic.c
-          echo "}" >> kernel/panic.c
-          echo "" >> kernel/panic.c
-          echo "EXPORT_SYMBOL(qcom_smem_get);" >> kernel/panic.c
-          echo "EXPORT_SYMBOL(__tracepoint_pil_restart_level);" >> kernel/panic.c
-          echo "EXPORT_SYMBOL(mi_disp_unregister_client);" >> kernel/panic.c
-          echo "EXPORT_SYMBOL(mi_disp_set_fod_queue_work);" >> kernel/panic.c
-
-          curl -L https://raw.githubusercontent.com/Subeesh97/kernel_build/refs/heads/main/odin_defconfig -o arch/arm64/configs/odin_defconfig
-          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-          
-          find drivers/input/ -name "*.c" -exec grep -l "devm_pinctrl_get\|pinctrl_select_state\|pinctrl_lookup_state" {} \; | \
-          while read file; do
-              echo "Fixing $file"
-              if ! grep -q "linux/pinctrl/consumer.h" "$file"; then
-                  sed -i '10i #include <linux/pinctrl/consumer.h>' "$file"
-              fi
-              sed -i 's/int rc;/int rc = 0;/g' "$file"
-          done
-          
-          sed -i 's/WLAN_INI_FILE_DEFAULT/\"\/vendor\/etc\/wifi\/WCNSS_qcom_cfg.ini\"/g' drivers/staging/qcacld-3.0/core/hdd/src/wlan_hdd_main.c
-          sed -i 's/struct ce_ops \*ce_services_legacy()/struct ce_ops *ce_services_legacy(void)/g' drivers/staging/qca-wifi-host-cmn/hif/src/ce/ce_service_legacy.c
-          export KCFLAGS="-Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=strict-prototypes"
+          git submodule update --init --recursive
           make ${args} ${{ env.KERNEL_CONFIG }}
-
-          scripts/config --file ../out/.config --disable DEBUG_FS
-          scripts/config --file ../out/.config --disable CC_STACKPROTECTOR
-          scripts/config --file ../out/.config --disable STACKPROTECTOR
-          scripts/config --file ../out/.config --disable STACKPROTECTOR_STRONG
-          sed -i 's/CONFIG_LOCALVERSION="-qgki"/CONFIG_LOCALVERSION="-PhoeniX"/' ../out/.config    
-          sed -i 's/CONFIG_MI_DISP=y/# CONFIG_MI_DISP is not set/g' ../out/.config
-          sed -i 's/CONFIG_DRM_MI_DISP=y/# CONFIG_DRM_MI_DISP is not set/g' ../out/.config
-          sed -i 's/CONFIG_MSM_CVP=y/# CONFIG_MSM_CVP is not set/g' ../out/.config
-          sed -i 's/CONFIG_VIDEO_CVP=y/# CONFIG_VIDEO_CVP is not set/g' ../out/.config
-          sed -i 's/CONFIG_MSM_GLOBAL_SYNX=y/# CONFIG_MSM_GLOBAL_SYNX is not set/g' ../out/.config
-          sed -i 's/CONFIG_REGULATOR_QPNP_PON=y/# CONFIG_REGULATOR_QPNP_PON is not set/g' ../out/.config
-          echo "CONFIG_PINCTRL=y" >> ../out/.config
-          echo "CONFIG_PINCTRL_MSM=y" >> ../out/.config
-          echo "CONFIG_QCOM_SMEM=y" >> ../out/.config
-          echo "CONFIG_REGULATOR=y" >> ../out/.config
-          sed -i '/CONFIG_MI_THERMAL/d' ../out/.config
-          sed -i '/CONFIG_QCOM_PIL/d' ../out/.config
-          sed -i '/CONFIG_MSM_PIL/d' ../out/.config
-          echo "# CONFIG_MI_THERMAL is not set" >> ../out/.config
-          echo "# CONFIG_QCOM_PIL is not set" >> ../out/.config
-          echo "# CONFIG_MSM_PIL is not set" >> ../out/.config
-          echo "CONFIG_QCOM_SMEM=m" >> ../out/.config
-
+          
+          scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_STRONG
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_PER_TASK
           make ${args} olddefconfig
-
+          
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
 
 
@@ -134,9 +78,12 @@ jobs:
           if [ -f out/arch/arm64/boot/dtbo.img ]; then
             cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
           fi
+          if [ -f out/arch/arm64/boot/dtb.img ]; then
+             cp out/arch/arm64/boot/dtb.img AnyKernel3/dtb
+          fi
 
       - name: Upload kernel to artifact
         uses: actions/upload-artifact@v4
         with:
-          name: output_kernel
+          name: PhoeniX_Kernel
           path: AnyKernel3/*
