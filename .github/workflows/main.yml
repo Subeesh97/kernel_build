@@ -48,36 +48,31 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
-          cat >> kernel/panic.c << 'EOF'
-
-          /* Stub functions for missing vendor symbols */
-          void *qcom_smem_get(unsigned host, unsigned item, size_t *size)
-          {
-              if (size) *size = 0;
-              return NULL;
-          }
-
-          struct tracepoint __tracepoint_pil_restart_level = {
-              .name = "pil_restart_level",
-              .key = STATIC_KEY_INIT_FALSE,
-              .static_key_false = STATIC_KEY_INIT_FALSE,
-          };
-
-          int mi_disp_unregister_client(void *client) 
-          { 
-              return 0; 
-          }
-
-          int mi_disp_set_fod_queue_work(void *work, bool enable) 
-          { 
-              return 0; 
-          }
-
-          EXPORT_SYMBOL(qcom_smem_get);
-          EXPORT_SYMBOL(__tracepoint_pil_restart_level);
-          EXPORT_SYMBOL(mi_disp_unregister_client);
-          EXPORT_SYMBOL(mi_disp_set_fod_queue_work);
-          EOF
+          head -n 767 kernel/panic.c > kernel/panic.c.tmp
+          mv kernel/panic.c.tmp kernel/panic.c
+          echo "" >> kernel/panic.c
+          echo "/* Simple stub functions for missing symbols */" >> kernel/panic.c
+          echo "void *qcom_smem_get(unsigned host, unsigned item, void *size)" >> kernel/panic.c
+          echo "{" >> kernel/panic.c
+          echo "    return NULL;" >> kernel/panic.c
+          echo "}" >> kernel/panic.c
+          echo "" >> kernel/panic.c
+          echo "int __tracepoint_pil_restart_level = 0;" >> kernel/panic.c
+          echo "" >> kernel/panic.c
+          echo "int mi_disp_unregister_client(void *client)" >> kernel/panic.c
+          echo "{" >> kernel/panic.c
+          echo "    return 0;" >> kernel/panic.c
+          echo "}" >> kernel/panic.c
+          echo "" >> kernel/panic.c
+          echo "int mi_disp_set_fod_queue_work(void *work, int enable)" >> kernel/panic.c
+          echo "{" >> kernel/panic.c
+          echo "    return 0;" >> kernel/panic.c
+          echo "}" >> kernel/panic.c
+          echo "" >> kernel/panic.c
+          echo "EXPORT_SYMBOL(qcom_smem_get);" >> kernel/panic.c
+          echo "EXPORT_SYMBOL(__tracepoint_pil_restart_level);" >> kernel/panic.c
+          echo "EXPORT_SYMBOL(mi_disp_unregister_client);" >> kernel/panic.c
+          echo "EXPORT_SYMBOL(mi_disp_set_fod_queue_work);" >> kernel/panic.c
 
           sed -i '1i #include <linux/soc/qcom/smem.h>' kernel/panic.c
           sed -i '2i #include <linux/tracepoint.h>' kernel/panic.c
