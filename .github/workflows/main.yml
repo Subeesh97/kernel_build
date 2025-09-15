@@ -80,6 +80,14 @@ jobs:
           echo "CONFIG_PINCTRL_MSM=y" >> ../out/.config
           echo "CONFIG_QCOM_SMEM=y" >> ../out/.config
           echo "CONFIG_REGULATOR=y" >> ../out/.config
+          sed -i '/CONFIG_MI_THERMAL/d' ../out/.config
+          sed -i '/CONFIG_QCOM_PIL/d' ../out/.config
+          sed -i '/CONFIG_MSM_PIL/d' ../out/.config
+          echo "# CONFIG_MI_THERMAL is not set" >> ../out/.config
+          echo "# CONFIG_QCOM_PIL is not set" >> ../out/.config
+          echo "# CONFIG_MSM_PIL is not set" >> ../out/.config
+          echo "CONFIG_QCOM_SMEM=m" >> ../out/.config
+
           make ${args} olddefconfig
 
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
