@@ -52,6 +52,8 @@ jobs:
           curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
           sed -i '/include <linux\/pinctrl\/qcom-pinctrl.h>/a #include <linux/pinctrl/consumer.h>' drivers/input/fingerprint/fpc_tee/fpc1020_tee.c
           sed -i 's/int rc;/int rc = 0;/g' drivers/input/fingerprint/fpc_tee/fpc1020_tee.c
+          sed -i '1i #include <linux/pinctrl/consumer.h>' drivers/input/touchscreen/cyttsp5/cyttsp5_platform.c
+          
           make ${args} ${{ env.KERNEL_CONFIG }}
 
           scripts/config --file ../out/.config --disable DEBUG_FS
