@@ -37,7 +37,8 @@ jobs:
 
       - name: Pull kernel source
         run: |
-         git clone --depth=1 https://TycOnee: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@github.com/${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_SOURCE_BRANCH }} kernel-source
+          git clone --depth=1 ${{ env.KERNEL_SOURCE }} -b ${{ env.KERNEL_SOURCE_BRANCH }} kernel-source
+
          
       - name: Build kernel
         run: |
@@ -51,7 +52,7 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
-          git submodule update --init --recursive
+          
           make ${args} ${{ env.KERNEL_CONFIG }}
           
           scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
