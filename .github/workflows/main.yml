@@ -51,20 +51,9 @@ jobs:
                                   CROSS_COMPILE=$GITHUB_WORKSPACE/aarch64-linux-android-4.9/bin/aarch64-linux-android- \
                                   CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/arm-linux-androideabi-4.9/bin/arm-linux-androideabi- "
           cd kernel-source
-          rm -rf drivers/kernelsu
-          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
-          sed -i 's/obj-$(CONFIG_ZSTD.*) += zstd/# &/g' lib/Makefile
-          make ${args} ${{ env.KERNEL_CONFIG }}
           
-          sed -i 's/CONFIG_ZSTD_COMPRESS=y/# CONFIG_ZSTD_COMPRESS is not set/' ../out/.config
-          sed -i 's/CONFIG_ZSTD_DECOMPRESS=y/# CONFIG_ZSTD_DECOMPRESS is not set/' ../out/.config
-          sed -i 's/CONFIG_CRYPTO_ZSTD=y/# CONFIG_CRYPTO_ZSTD is not set/' ../out/.config
-          sed -i 's/CONFIG_INCREMENTAL_FS=y/# CONFIG_INCREMENTAL_FS is not set/' ../out/.config
-          scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
-          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR
-          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_STRONG
-          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_PER_TASK
-          make ${args} olddefconfig
+          make ${args} ${{ env.KERNEL_CONFIG }}
+
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
 
 
