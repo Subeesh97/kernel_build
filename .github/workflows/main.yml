@@ -56,7 +56,7 @@ jobs:
           
           sed -i 's/CONFIG_ZSTD_COMPRESS=y/# CONFIG_ZSTD_COMPRESS is not set/' ../out/.config
           sed -i 's/CONFIG_ZSTD_DECOMPRESS=y/# CONFIG_ZSTD_DECOMPRESS is not set/' ../out/.config
-          
+          sed -i 's/CONFIG_CRYPTO_ZSTD=y/# CONFIG_CRYPTO_ZSTD is not set/' ../out/.config
           make ${args} olddefconfig
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
 
