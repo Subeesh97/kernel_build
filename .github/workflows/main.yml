@@ -54,6 +54,12 @@ jobs:
           
           make ${args} ${{ env.KERNEL_CONFIG }}
 
+          scripts/config --file ../out/.config --disable CONFIG_CC_STACKPROTECTOR
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_STRONG
+          scripts/config --file ../out/.config --disable CONFIG_STACKPROTECTOR_PER_TASK
+          make ${args} olddefconfig
+
           make -j$(($(getconf _NPROCESSORS_ONLN) * 2)) ${args}
 
 
